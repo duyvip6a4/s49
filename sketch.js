@@ -1,15 +1,20 @@
-let str=new Array(5),ANS,ans,Const;
-let Line=[[-100,100],[100,-100],[-100,-100],[100,100],[0,0]];
+let ANS,ans,Const;
+let str=new Array(5);
+let turnleft=3, notStart=true;
+let sideCircle=[[-100,100],[100,-100],[-100,-100],[100,100],[0,0]];
 let CenterCircle=[[200,200],[600,200],[200,550],[600,550]];
-let notStart=true;
+
+
 function setup() 
 {
   createCanvas(800, 800);
+  //frameRate(10);
   Intro();
 }
 
-function draw() 
+function draw()
 {
+  //check if click "bat dau" or "choi lai"
   if (notStart)
   {
     if (mouseIsPressed && mouseX>=300 && mouseX<=500 && mouseY>=750 && mouseY<=800)
@@ -19,7 +24,12 @@ function draw()
     }
     return;
   }
-  //Start
+}
+
+function keyTyped()
+{
+  if (notStart) return;
+  //check answer
   if (keyIsPressed && key.length==1)
   {
     if ("a"<=key && key<="z")
@@ -49,64 +59,85 @@ function Intro()
 {
   background("#1EF5EF");
   push();
+  
+  //Title
   textSize(45);
   textAlign(CENTER, TOP);
   text("Món kem đánh đố của Giovanni (2)",0,40,800);
+  
+  //Introduction
   textSize(25);
   textAlign(LEFT, TOP);
-  text("Thầy Noah rất thích thú với món kem đánh đố của ông chủ tiệm cà phê Giovani nên đã cố tình nhờ Giovani làm thêm một phiên bản khác cho cô bạn Rebecca. Tương tự như câu đố trước, các ký tự sẽ có giá trị từ 1-26 tương ứng với vị trí trong bảng chữ cái. Và Rebecca phải giải mật mã bí ẩn đó để khám phá ra ký tự còn thiếu. Bạn hãy giúp cô ấy một tay nhé!",20,150,760);
+  text("Thầy Noah rất thích thú với món kem đánh đố của ông chủ tiệm cà phê Giovani nên đã cố tình nhờ Giovani làm thêm một phiên bản khác cho cô bạn Rebecca. Tương tự như câu đố trước, các ký tự sẽ có giá trị từ 1-26 tương ứng với vị trí trong bảng chữ cái. Và Rebecca phải giải mật mã bí ẩn đó để khám phá ra ký tự còn thiếu. Bạn hãy giúp cô ấy một tay nhé! Bạn chỉ có 3 lượt giúp thôi.",20,150,760);
+  
+  //The start button
   fill("black");
   rect(300,750,200,50);
   textAlign(CENTER,CENTER);
   fill("white");
   textSize(35);
   text("Bắt đầu",0,780,800);
+  
   pop();
 }
 
 function Start()
 {
-  background("#16E0DA");
+  background("#16E0DA"); //clear screen
+  
+  //announcement - how to answer
   textSize(30);
   textAlign(LEFT, TOP);
   text("Trả lời bằng bàn phím nhé!",0,5);
-  //init
+  
+  //init the drawings
   strokeWeight(5);  
   textAlign(CENTER, CENTER);
   textSize(30);
   Const=RandInt(-3,3);
-  //string
+  
+  //create Strings of example and answer
   for (let i=0; i<4; ++i)
     str[i] = (Create5char());
-  //create Ans with non-capital and capital
+  
+  //update ans with capital and non-capital
   ANS=str[3][4];
-  ans=String.fromCharCode(ANS.charCodeAt(0)+32); 
+  ans=String.fromCharCode(ANS.charCodeAt(0)+32);
+  
+  //update the fourth circle's center with '?'
   str[3]=str[3].substring(0,4)+"?";
-  DrawQues();
+  
+  //draw
+  DrawMap();
+  console.log(ANS);
 }
 
-function DrawQues()
+function DrawMap()
 {
   for (let k=0; k<4; ++k)
   {
     push();
-      translate(CenterCircle[k][0],CenterCircle[k][1]); 
+      //move the Origin to the Center of 5 circles
+      translate(CenterCircle[k][0],CenterCircle[k][1]);
+      
+      //Draw Lines, circles and texts, based on str[k] and sideCircle[]
       for (let i=0; i<5; ++i)
       {
-        line(0,0,Line[i][0],Line[i][1]);
-        ellipse(Line[i][0],Line[i][1],100,100);
-        text(str[k][i], 0, Line[i][1], 2*Line[i][0]);
+        line(0,0,sideCircle[i][0],sideCircle[i][1]);
+        ellipse(sideCircle[i][0],sideCircle[i][1],100,100);
+        text(str[k][i], 0, sideCircle[i][1], 2*sideCircle[i][0]);
       }
     pop();
   }
 }
-
-function RandInt(Min,Max) //so nguyen ngau nhien tu Min->Max
+function RandInt(Min,Max) 
+//random integer from Min to Max (Min,Max is also integers)
 {
   return Math.round(random(Min-0.5,Max+0.5));
 }
 
-function Create5char() //sum=a+b+c+d+const
+function Create5char() 
+//create 5 character with sum=a+b+c+d+const
 {
   //sum>=4+const
   sum=RandInt(4+Const,26); 
@@ -124,36 +155,65 @@ function Create5char() //sum=a+b+c+d+const
 function RightAnswer()
 {
   push();
-  //thong bao
-  noStroke();
-  fill("#16E0DA");
-  rect(0,705,800,100);
-  fill("green");
-  text("Bạn đã trả lời đúng rồi!",0,720,800);
-  strokeWeight(5);
-  ellipse(CenterCircle[3][0],CenterCircle[3][1],100,100);
-  fill("white");
-  text(ANS, 0, CenterCircle[3][1], CenterCircle[3][0]*2);
-  //thong bao choi lai
-  fill("#87E92A");
-  rect(300,750,200,60);
-  textAlign(CENTER,CENTER);
-  fill("#3B1AD5");
-  textSize(35);
-  text("Chơi lại",0,780,800);
-  notStart=true;
+	  //erase old texts
+	  noStroke();
+	  fill("#16E0DA");
+	  rect(0,705,800,100);
+	  
+	  //announcement - correct answer
+	  fill("green");
+	  text("Bạn đã trả lời đúng rồi!",0,720,800);
+	  strokeWeight(5);
+	  
+	  //fill up the 4th center circle with answer
+	  ellipse(CenterCircle[3][0],CenterCircle[3][1],100,100);
+	  fill("white");
+	  text(ANS, 0, CenterCircle[3][1], CenterCircle[3][0]*2);
+	  
+	  //draw restart button and init values
+	  fill("#87E92A");
+	  rect(300,750,200,60);
+	  textAlign(CENTER,CENTER);
+            //text
+	  fill("#3B1AD5");
+	  textSize(35);
+	  text("Chơi lại",0,780,800);
+	  notStart=true;
+      turnleft=3;
   pop();
 }
 
 function WrongAnswer(str)
 {
+  --turnleft;
   push();
-  //thong bao
-  fill("red");
-  text("Bạn đã trả lời sai rồi! Thử tìm quy luật nhé",0,750,800);
-  ellipse(CenterCircle[3][0],CenterCircle[3][1],100,100);
-  fill("white");
-  text(str, 0, CenterCircle[3][1], CenterCircle[3][0]*2);
+      //erase old texts
+	  noStroke();
+	  fill("#16E0DA");
+	  rect(0,705,800,100);
+	  
+	  //announcement - incorrect answer
+	  fill("red");
+	  text("Bạn đã trả lời sai! Bạn còn " + turnleft +" lượt.",0,720,800);
+	  strokeWeight(5);
+	  
+	  //fill up the 4th center circle with answer
+	  ellipse(CenterCircle[3][0],CenterCircle[3][1],100,100);
+	  fill("white");
+	  text(str, 0, CenterCircle[3][1], CenterCircle[3][0]*2);
+      
+      //if no turn left, draw restart button and init values
+      if (turnleft==0)
+      {
+          fill("#87E92A");
+		  rect(300,750,200,60);
+		  textAlign(CENTER,CENTER);
+	          //text
+		  fill("#3B1AD5");
+		  textSize(35);
+		  text("Chơi lại",0,780,800);
+		  notStart=true;
+	      turnleft=3;
+      }
   pop();
 }
-
