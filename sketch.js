@@ -1,6 +1,6 @@
 let str=new Array(5),ANS,ans,Const;
 let Line=[[-100,100],[100,-100],[-100,-100],[100,100],[0,0]];
-let CenterCircle=[[200,200],[600,200],[200,600],[600,600]];
+let CenterCircle=[[200,200],[600,200],[200,550],[600,550]];
 let notStart=true;
 function setup() 
 {
@@ -12,7 +12,7 @@ function draw()
 {
   if (notStart)
   {
-    if (mouseIsPressed && mouseX>=300 && mouseX<=500 && mouseY>=500 && mouseY<=600)
+    if (mouseIsPressed && mouseX>=300 && mouseX<=500 && mouseY>=750 && mouseY<=800)
     {
       notStart=false;
       Start();
@@ -26,38 +26,21 @@ function draw()
     {
       if (key==ans)
       {
-        fill("green");
-        ellipse(600,600,100,100);
-        fill("white");
-        text(ANS, 0, 600, 1200);
-        noLoop(); return;
+        RightAnswer();
+        return;
       }
       else
-      {
-        fill("red");
-        ellipse(600,600,100,100);
-        fill("white");
-        let CAPS=String.fromCharCode(key.charCodeAt(0)-32); 
-        text(CAPS, 0, 600, 1200);
-      }
+        WrongAnswer(String.fromCharCode(key.charCodeAt(0)-32));
     }
     if ("A"<=key && key<="Z")
     {
       if (key==ANS)
       {
-        fill("green");
-        ellipse(600,600,100,100);
-        fill("white");
-        text(ANS, 0, 600, 1200);
-        noLoop(); return;
+        RightAnswer();
+        return;
       }
       else
-      {
-        fill("red");
-        ellipse(600,600,100,100);
-        fill("white");
-        text(key, 0, 600, 1200);
-      }
+        WrongAnswer(key);
     }
   }
 }
@@ -73,11 +56,11 @@ function Intro()
   textAlign(LEFT, TOP);
   text("Thầy Noah rất thích thú với món kem đánh đố của ông chủ tiệm cà phê Giovani nên đã cố tình nhờ Giovani làm thêm một phiên bản khác cho cô bạn Rebecca. Tương tự như câu đố trước, các ký tự sẽ có giá trị từ 1-26 tương ứng với vị trí trong bảng chữ cái. Và Rebecca phải giải mật mã bí ẩn đó để khám phá ra ký tự còn thiếu. Bạn hãy giúp cô ấy một tay nhé!",20,150,760);
   fill("black");
-  rect(300,500,200,100);
+  rect(300,750,200,50);
   textAlign(CENTER,CENTER);
   fill("white");
-  textSize(40);
-  text("Bắt đầu",0,550,800);
+  textSize(35);
+  text("Bắt đầu",0,780,800);
   pop();
 }
 
@@ -85,7 +68,8 @@ function Start()
 {
   background("#16E0DA");
   textSize(30);
-  text("Trả lời bằng bàn phím nhé!",0,35);
+  textAlign(LEFT, TOP);
+  text("Trả lời bằng bàn phím nhé!",0,5);
   //init
   strokeWeight(5);  
   textAlign(CENTER, CENTER);
@@ -99,7 +83,6 @@ function Start()
   ans=String.fromCharCode(ANS.charCodeAt(0)+32); 
   str[3]=str[3].substring(0,4)+"?";
   DrawQues();
-  //console.log(ans,Const);
 }
 
 function DrawQues()
@@ -118,7 +101,7 @@ function DrawQues()
   }
 }
 
-function RandInt(Min,Max)
+function RandInt(Min,Max) //so nguyen ngau nhien tu Min->Max
 {
   return Math.round(random(Min-0.5,Max+0.5));
 }
@@ -137,3 +120,40 @@ function Create5char() //sum=a+b+c+d+const
   //convert 1-26 to 65-90
   return ( String.fromCharCode(a+64,b+64,c+64,d+64,sum+64) );
 }
+
+function RightAnswer()
+{
+  push();
+  //thong bao
+  noStroke();
+  fill("#16E0DA");
+  rect(0,705,800,100);
+  fill("green");
+  text("Bạn đã trả lời đúng rồi!",0,720,800);
+  strokeWeight(5);
+  ellipse(CenterCircle[3][0],CenterCircle[3][1],100,100);
+  fill("white");
+  text(ANS, 0, CenterCircle[3][1], CenterCircle[3][0]*2);
+  //thong bao choi lai
+  fill("#87E92A");
+  rect(300,750,200,60);
+  textAlign(CENTER,CENTER);
+  fill("#3B1AD5");
+  textSize(35);
+  text("Chơi lại",0,780,800);
+  notStart=true;
+  pop();
+}
+
+function WrongAnswer(str)
+{
+  push();
+  //thong bao
+  fill("red");
+  text("Bạn đã trả lời sai rồi! Thử tìm quy luật nhé",0,750,800);
+  ellipse(CenterCircle[3][0],CenterCircle[3][1],100,100);
+  fill("white");
+  text(str, 0, CenterCircle[3][1], CenterCircle[3][0]*2);
+  pop();
+}
+
