@@ -1,6 +1,6 @@
 let ANS,ans,Const;
 let str=new Array(5);
-let turnleft=3, notStart=true;
+let turnleft, notStart=true;
 let sideCircle=[[-100,100],[100,-100],[-100,-100],[100,100],[0,0]];
 let CenterCircle=[[200,200],[600,200],[200,550],[600,550]];
 
@@ -15,15 +15,33 @@ function setup()
 function draw()
 {
   //check if click "bat dau" or "choi lai"
-  if (notStart)
+  if (notStart && mouseIsPressed && mouseX>=300 && mouseX<=500 && mouseY>=750 && mouseY<=800)
   {
-    if (mouseIsPressed && mouseX>=300 && mouseX<=500 && mouseY>=750 && mouseY<=800)
-    {
-      notStart=false;
-      Start();
-    }
-    return;
+    notStart=false;
+    Start();
   }
+  
+  //check if click "Quay lai"
+  if (notStart==false)
+  {
+    //Back button
+    push();
+    noStroke();
+    fill("#87E92A");
+    rect(100,750,200,60);
+    textAlign(CENTER,CENTER);
+    fill("#3B1AD5");
+    textSize(35);
+    text("Giới thiệu",0,780,400);
+    pop();
+    if (mouseIsPressed && mouseX>=100 && mouseX<=300 && mouseY>=750 && mouseY<=800)
+    {
+      notStart=true;
+      Intro();
+    }
+  }
+  
+  
 }
 
 function keyTyped()
@@ -95,6 +113,7 @@ function Start()
   textAlign(CENTER, CENTER);
   textSize(30);
   Const=RandInt(-3,3);
+  turnleft=3;
   
   //create Strings of example and answer
   for (let i=0; i<4; ++i)
@@ -109,7 +128,6 @@ function Start()
   
   //draw
   DrawMap();
-  //console.log(ANS);
 }
 
 function DrawMap()
