@@ -109,7 +109,7 @@ function Start()
   
   //draw
   DrawMap();
-  console.log(ANS);
+  //console.log(ANS);
 }
 
 function DrawMap()
